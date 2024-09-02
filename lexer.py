@@ -8,12 +8,25 @@ class Lexer:
     def __init__(self):
         self.tokens = []
         self.token = []
-        self.specials = ["+", "-", "*", "/"]
+        self.specials = ["+", "-", "*", "/", ";"]
         self.lastToken = ""
     def tokenize(self, ln):
         for n in range(len(ln)):
             i = ln[n]
-            if i == " " and '"' not in self.lastToken:
+            if i == " " and '"' not in self.lastToken and i not in self.specials:
+                if self.lastToken != "":
+                    self.token.append(self.lastToken)
+                    self.lastToken = ""
+            elif n+1 == len(ln) or n == len(ln):
+                self.token.append(self.lastToken)
+                self.lastToken = ""
+                self.lastToken+= i
+                self.token.append(self.lastToken)
+                self.lastToken = ""
+            elif i in self.specials:
+                self.token.append(self.lastToken)
+                self.lastToken = ""
+                self.lastToken += i
                 self.token.append(self.lastToken)
                 self.lastToken = ""
             else:
@@ -26,4 +39,4 @@ class Lexer:
 
 lexer = Lexer()
 
-print(lexer.tokenize("1 + 1"))
+print(lexer.tokenize("1 + 1;"))
