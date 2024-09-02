@@ -11,15 +11,19 @@ class Lexer:
         self.specials = ["+", "-", "*", "/"]
         self.lastToken = ""
     def tokenize(self, ln):
-        for i in ln:
-            if i == " ":
+        for n in range(len(ln)):
+            i = ln[n]
+            if i == " " and '"' not in self.lastToken:
                 self.token.append(self.lastToken)
                 self.lastToken = ""
             else:
                 self.lastToken += i
 
-        return self.token
+        self.tokens.append(self.token)
+        self.token = []
+        self.lastToken = ""
+        return self.tokens
 
 lexer = Lexer()
 
-print(lexer.tokenize("1 + 1 = 5;"))
+print(lexer.tokenize("1 + 1"))
