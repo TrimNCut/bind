@@ -69,27 +69,39 @@ class Lexer:
         self.inString = False
         for n in range(len(token)):
             i = token[n]
-            if self.inString:
-                self.lastToken+= " "+i 
-            else:
-                self.lastToken+= i
-            if i == "'" or i == '"' or "'" in i or '"' in i:
-                if self.inString == True:
-                    self.inString = False
-                    self.token.append(self.lastToken)
-                    self.lastToken = ""
-                else:
-                    self.inString = True
-            elif self.inString == True:
+            self.lastToken += i
+            if "'" in i or '"' in i:
+                if self.inString:
+                    self.lastToken+= " "+i
                 if i == "'" or i == '"' or "'" in i or '"' in i:
-                    self.inString = False
+                    if self.inString == True:
+                        self.inString = False
+                        self.token.append(self.lastToken)
+                        self.lastToken = ""
+                    else:
+                        self.inString = True
+                elif self.inString == True:
+                    if i == "'" or i == '"' or "'" in i or '"' in i:
+                        count = 0
+                        for j in range(len(i)):
+                            tmp = j
+                            if tmp == "'" and i[j+1] != "'" and j+1<len(i):
+                                count += 1
+                            elif tmp !="'" and i[j+1] == "'" and j+1<len(i):
+                                count += 1
+                            elif tmp != "'" and i[j+1] == "'" and j+1<len(i):
+                                count += 0
+                            elif tmp == "'" and  j+1>len(i):
+                                count += 1
+                        if (count % 2) == 0:
+                            self.inString = False
+                        else:
+                            self.inString = True
+                    else:
+                        pass
+                elif self.inString == False:
                     self.token.append(self.lastToken)
                     self.lastToken = ""
-                else:
-                    pass
-            elif self.inString == False:
-                self.token.append(self.lastToken)
-                self.lastToken = ""
             elif i != "":
                 self.token.append(self.lastToken)
                 self.lastToken = ""
@@ -117,4 +129,5 @@ class Lexer:
 
 lexer = Lexer()
 
-print(lexer.tokenize(input("Enter Code : ")))
+#print(lexer.tokenize(input("Enter Code : ")))
+print(lexer.tokenize('new a = "james";'))
