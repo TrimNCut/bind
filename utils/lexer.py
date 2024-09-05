@@ -1,4 +1,4 @@
-'''
+"""
     GOAL:
         input : 1 + 1 * 5;
         output: [[INT::1, "PLUS", "INT::1", "MULTIPLY", "INT::5", "BREAK"]]
@@ -6,8 +6,10 @@
     BUGS:
         -cannot detect string
 
-'''
+"""
+
 import re
+
 
 class Lexer:
     def __init__(self):
@@ -28,7 +30,8 @@ class Lexer:
             "=": "ASSIGNMENT",
             ";": "BREAK",
         }
-    def tokenize(self, ln):
+
+    def tokenize(self, ln: str) -> list[list[str]]:
         self.token = []
         self.tmpToken = []
         for n in range(len(ln)):
@@ -38,15 +41,15 @@ class Lexer:
                 if self.lastToken != "":
                     self.tmpToken.append(self.lastToken)
                     self.lastToken = ""
-            elif n+1 == len(ln):
+            elif n + 1 == len(ln):
                 if i == ";":
                     self.tmpToken.append(self.lastToken)
                     self.lastToken = ""
-                    self.lastToken+= i
+                    self.lastToken += i
                     self.tmpToken.append(self.lastToken)
                     self.lastToken = ""
                 else:
-                    self.lastToken+= i
+                    self.lastToken += i
                     self.tmpToken.append(self.lastToken)
                     self.lastToken = ""
             elif i in self.specials:
@@ -63,7 +66,7 @@ class Lexer:
         self.lastToken = ""
         self.assignTypes(self.tmpToken)
         return self.tokens
-    
+
     def assignTypes(self, token):
         self.lastToken = ""
         self.inString = False
@@ -72,7 +75,7 @@ class Lexer:
             self.lastToken += i
             if "'" in i or '"' in i:
                 if self.inString:
-                    self.lastToken+= " "+i
+                    self.lastToken += " " + i
                 if i == "'" or i == '"' or "'" in i or '"' in i:
                     if self.inString == True:
                         self.inString = False
@@ -85,13 +88,13 @@ class Lexer:
                         count = 0
                         for j in range(len(i)):
                             tmp = j
-                            if tmp == "'" and i[j+1] != "'" and j+1<len(i):
+                            if tmp == "'" and i[j + 1] != "'" and j + 1 < len(i):
                                 count += 1
-                            elif tmp !="'" and i[j+1] == "'" and j+1<len(i):
+                            elif tmp != "'" and i[j + 1] == "'" and j + 1 < len(i):
                                 count += 1
-                            elif tmp != "'" and i[j+1] == "'" and j+1<len(i):
+                            elif tmp != "'" and i[j + 1] == "'" and j + 1 < len(i):
                                 count += 0
-                            elif tmp == "'" and  j+1>len(i):
+                            elif tmp == "'" and j + 1 > len(i):
                                 count += 1
                         if (count % 2) == 0:
                             self.inString = False
@@ -115,19 +118,19 @@ class Lexer:
                 else:
                     self.token[n] = self.keywords[i]
                 if i == "new":
-                    if len(self.token) > n+1:
-                        self.token[n+1] = "VARIABLE::"+self.token[n+1]
-                        n+=1
+                    if len(self.token) > n + 1:
+                        self.token[n + 1] = "VARIABLE::" + self.token[n + 1]
+                        n += 1
                     else:
                         pass
-            elif re.search(r"[0-9]",i):
+            elif re.search(r"[0-9]", i):
                 self.token[n] = "INT" + "::" + i
             elif re.search(r"[0-9a-zA-Z_-]", i):
                 self.token[n] = "STR" + "::" + i
             else:
                 pass
 
-lexer = Lexer()
 
-#print(lexer.tokenize(input("Enter Code : ")))
-print(lexer.tokenize('new a = "james";'))
+# lexer = Lexer()
+# print(lexer.tokenize(input("Enter Code : ")))
+# print(lexer.tokenize('new a = "james";'))
