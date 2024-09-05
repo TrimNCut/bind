@@ -1,4 +1,4 @@
-'''
+"""
     GOAL:
         input : 1 + 1 * 5;
         output: [[INT::1, "PLUS", "INT::1", "MULTIPLY", "INT::5", "BREAK"]]
@@ -17,7 +17,6 @@
         - cannot detect strings when only typed e.g input -> "a"
 '''
 import re
-from default import *
 
 class Lexer:
     def __init__(self):
@@ -40,15 +39,15 @@ class Lexer:
                 if self.lastToken != "":
                     self.tmpToken.append(self.lastToken)
                     self.lastToken = ""
-            elif n+1 == len(ln):
+            elif n + 1 == len(ln):
                 if i == ";":
                     self.tmpToken.append(self.lastToken)
                     self.lastToken = ""
-                    self.lastToken+= i
+                    self.lastToken += i
                     self.tmpToken.append(self.lastToken)
                     self.lastToken = ""
                 else:
-                    self.lastToken+= i
+                    self.lastToken += i
                     self.tmpToken.append(self.lastToken)
                     self.lastToken = ""
             elif i in self.specials:
@@ -65,7 +64,7 @@ class Lexer:
         self.lastToken = ""
         self.assignTypes(self.tmpToken)
         return self.tokens
-    
+
     def assignTypes(self, token):
         self.lastToken = ""
         self.inString = 1
@@ -94,12 +93,12 @@ class Lexer:
                 else:
                     self.token[n] = self.keywords[i]
                 if i == "new":
-                    if len(self.token) > n+1:
-                        self.token[n+1] = "VARIABLE::"+self.token[n+1]
-                        n+=1
+                    if len(self.token) > n + 1:
+                        self.token[n + 1] = "VARIABLE::" + self.token[n + 1]
+                        n += 1
                     else:
                         pass
-            elif re.search(r"[0-9]",i):
+            elif re.search(r"[0-9]", i):
                 self.token[n] = "INT" + "::" + i
             elif re.search(r"[0-9.]",i):
                 self.token[n] = "FLT" + "::" + i
@@ -108,7 +107,10 @@ class Lexer:
             else:
                 pass
 
-lexer = Lexer()
+
+# lexer = Lexer()
+# print(lexer.tokenize(input("Enter Code : ")))
+# print(lexer.tokenize('new a = "james";'))
 
 #print(lexer.tokenize(input("Enter Code : ")))
 print(lexer.tokenize(input("Enter Code : ")))
