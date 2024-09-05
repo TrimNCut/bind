@@ -17,6 +17,7 @@
         - cannot detect strings when only typed e.g input -> "a"
 '''
 import re
+from .vars import LEX_KEYWORDS
 
 class Lexer:
     def __init__(self):
@@ -108,7 +109,7 @@ class Lexer:
                 pass
 
 
-# lexer = Lexer()
+lexer = Lexer()
 # print(lexer.tokenize(input("Enter Code : ")))
 # print(lexer.tokenize('new a = "james";'))
 
