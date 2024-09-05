@@ -90,7 +90,7 @@ class Lexer:
             i = self.token[n]
             if i in self.keywords:
                 if i != "=" and i != ";":
-                    self.token[n] = self.keywords[i] + "::" + self.keywords[i]
+                    self.token[n] = self.keywords[i] + "::" + i
                 else:
                     self.token[n] = self.keywords[i]
                 if i == "new":
