@@ -1,5 +1,7 @@
 from typing import Literal
 
+from .constants import TYPES, TYPES_EXPECTED_FROM_LEXER
+
 
 class Parser:
     """Parser"""
@@ -17,7 +19,7 @@ class Parser:
         print(self.token)
         for line in self.token:
             # !Variable declaration
-            if line[0] == "DECLARATION::new":
+            if line[0] == "DECLARATION":
                 if not line[-1] == "BREAK":
                     raise SyntaxError(f"Line {line_num+1}: No line break found")
                 if not line[2] == "ASSIGNMENT":
@@ -35,10 +37,15 @@ class Parser:
     @staticmethod
     def get_type(
         line_token: list[str],
-    ) -> Literal["string"] | Literal["integer"] | Literal["none"]:
+    ) -> (
+        Literal["string"]
+        | Literal["integer"]
+        | Literal["float"]
+        | Literal["chr"]
+        | Literal["none"]
+    ):
         """Gets type of assignment"""
-        if line_token[1].split("::")[0] == "STR":
-            return "string"
-        if line_token[1].split("::")[0] == "INT":
-            return "integer"
-        return "none"
+        if not line_token[1].split("::")[0] in TYPES_EXPECTED_FROM_LEXER:
+            return "none"
+
+        return TYPES[line_token[1].split("::")[0]]
