@@ -18,7 +18,7 @@
         - ability to detect variable types
 '''
 import re
-from vars import LEX_KEYWORDS
+from constants import LEX_KEYWORDS
 
 class Lexer:
     def __init__(self):
